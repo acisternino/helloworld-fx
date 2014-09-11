@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project name="HelloFX" basedir="." default="build">
+
+    <property name="lib_dir" value="../hellofx-libs"/>
+    <property name="src_dir" value="src"/>
+    <property name="out_dir" value="out"/>
+
+    <path id="groovy.lib">
+        <fileset dir="${lib_dir}" includes="**/*.jar"/>
+    </path>
+
+    <taskdef name="groovyc"
+        classname="org.codehaus.groovy.ant.Groovyc"
+        classpathref="groovy.lib"/>
+
+    <target name="clean">
+        <delete dir="${out_dir}"/>
+    </target>
+
+    <target name="build" description="Compile main source tree Groovy files">
+        <mkdir dir="${out_dir}"/>
+        <groovyc destdir="${out_dir}">
+            <src path="${src_dir}"/>
+            <classpath refid="groovy.lib"/>
+        </groovyc>
+    </target>
+
+    <target name="run" depends="clean, build">
+        <java classname="helloworld.HelloWorldFx" fork="true" dir="${out_dir}">
+            <classpath>
+                <path refid="groovy.lib"/>
+                <path location="${out_dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>
